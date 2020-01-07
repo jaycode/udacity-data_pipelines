@@ -1,35 +1,5 @@
 class SqlQueries:
-    create_tables = ("""
-CREATE TABLE public.artists (
-    artistid varchar(256) NOT NULL,
-    name varchar(256),
-    location varchar(256),
-    lattitude numeric(18,0),
-    longitude numeric(18,0)
-);
-
-CREATE TABLE public.songplays (
-    playid varchar(32) NOT NULL,
-    start_time timestamp NOT NULL,
-    userid int4 NOT NULL,
-    "level" varchar(256),
-    songid varchar(256),
-    artistid varchar(256),
-    sessionid int4,
-    location varchar(256),
-    user_agent varchar(256),
-    CONSTRAINT songplays_pkey PRIMARY KEY (playid)
-);
-
-CREATE TABLE public.songs (
-    songid varchar(256) NOT NULL,
-    title varchar(256),
-    artistid varchar(256),
-    "year" int4,
-    duration numeric(18,0),
-    CONSTRAINT songs_pkey PRIMARY KEY (songid)
-);
-
+    create_staging_tables = ("""
 CREATE TABLE public.staging_events (
     artist varchar(256),
     auth varchar(256),
@@ -62,29 +32,15 @@ CREATE TABLE public.staging_songs (
     title varchar(256),
     duration numeric(18,0),
     "year" int4
-);
-
-CREATE TABLE public.staging_songs (
-    num_songs int4,
-    artist_id varchar(256),
-    artist_name varchar(256),
-    artist_latitude numeric(18,0),
-    artist_longitude numeric(18,0),
-    artist_location varchar(256),
-    song_id varchar(256),
-    title varchar(256),
-    duration numeric(18,0),
-    "year" int4
-);
-
-CREATE TABLE public.users (
-    userid int4 NOT NULL,
-    first_name varchar(256),
-    last_name varchar(256),
-    gender varchar(256),
-    "level" varchar(256),
-    CONSTRAINT users_pkey PRIMARY KEY (userid)
 );""")
+
+    staging_songs_count = ("""
+        SELECT COUNT(*) FROM staging_songs;
+    """)
+
+    staging_events_count = ("""
+        SELECT COUNT(*) FROM staging_events;
+    """)
 
     songplay_table_insert = ("""
         SELECT
@@ -123,7 +79,8 @@ CREATE TABLE public.users (
     """)
 
     time_table_insert = ("""
-        SELECT start_time, extract(hour from start_time), extract(day from start_time), extract(week from start_time), 
-               extract(month from start_time), extract(year from start_time), extract(dayofweek from start_time)
+        SELECT start_time, extract(hour from start_time) AS hour, extract(day from start_time) AS day, extract(week from start_time) AS week, 
+               extract(month from start_time) AS month, extract(year from start_time) AS year, extract(dayofweek from start_time) AS weekday
         FROM songplays
     """)
+
