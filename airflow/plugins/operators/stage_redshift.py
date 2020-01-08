@@ -13,7 +13,7 @@ class StageToRedshiftOperator(BaseOperator):
         SECRET_ACCESS_KEY '{}'
         REGION 'us-west-2'
         JSON '{}'
-        COMPUPDATE OFF
+        COMPUPDATE OFF;
     """
 
     @apply_defaults
@@ -39,17 +39,14 @@ class StageToRedshiftOperator(BaseOperator):
         credentials = aws_hook.get_credentials()
         redshift = PostgresHook(postgres_conn_id=self.db_conn_id)
 
-        # Do not copy if rows already exists, as copying songs takes too much time!
-        result = redshift.get_records(self.count_query)
-        numrows = result[0][0]
-        if numrows == 0:
-            self.log.info("Table {} is empty, so we run the COPY operation.".format(self.table))
-            formatted_sql = StageToRedshiftOperator.json_copy_sql.format(
-                self.table,
-                self.data_path,
-                credentials.access_key,
-                credentials.secret_key,
-                self.jsonpaths_path)
-            redshift.run(formatted_sql)
-        else:
-            self.log.info("Table {} has {} rows. Skip the COPY operation since the table is not empty.".format(self.table, numrows))
+        self.log.info("Delete all rows from table {}".format(self.table))
+        redshift.run("DELETE FROM {}".format(self.table))
+
+        self.log.info("Copy data from S3 to table {}".format(self.table))
+        formatted_sql = StageToRedshiftOperator.json_copy_sql.format(
+            self.table,
+            self.data_path,
+            credentials.access_key,
+            credentials.secret_key,
+            self.jsonpaths_path)
+        redshift.run(formatted_sql)

@@ -4,9 +4,10 @@ Submission for Udacity DEND Data Pipelines project.
 - [Link to rubric](https://review.udacity.com/#!/rubrics/2478/view)
 - [Link to project instructions](https://classroom.udacity.com/nanodegrees/nd027/parts/45d1c3b1-d87b-4578-a6d0-7e86bb5fea6c/modules/2adf57ae-57cb-42f6-bd65-a2c383797ce3/lessons/4d1d5892-2cab-4456-8b1a-fb2b5fa1488d/concepts/last-viewed?contentVersion=2.0.0&contentLocale=en-us)
 
-**Note: I also added a `Create_staging_tables` task. I could have kept table creations in `Stage_events` and `Stage_songs` but I wanted to experiment with the possibility of skipping a step when there is an error, for my future reference. I noticed the Rubric does not have a requirement that all DAG tasks must pass so I gave it a shot.**
+## How to run the project from locally-installed Apache Airflow
 
-## How to run the project locally
+### 0. Create the tables on Redshift cluster
+Run `airflow/create_tables.sql` on the Redshift cluster to create all the required tables.
 
 ### 1. Install Apache Airflow with S3 module:
 

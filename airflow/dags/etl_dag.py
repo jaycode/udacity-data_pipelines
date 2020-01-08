@@ -32,15 +32,6 @@ dag = DAG('etl_dag',
 
 start_operator = DummyOperator(task_id='Begin_execution',  dag=dag)
 
-create_tables = PostgresOperator(
-    task_id="Create_staging_tables",
-    dag=dag,
-    postgres_conn_id="redshift",
-    sql=SqlQueries.create_staging_tables,
-    # This task may fail, so we set retries to 1, and move on to next task when it does fail.
-    retries=0
-)
-
 stage_events_to_redshift = StageToRedshiftOperator(
     task_id='Stage_events',
     dag=dag,
@@ -120,7 +111,7 @@ run_quality_checks = DataQualityOperator(
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
-start_operator >> create_tables >> \
+start_operator >> \
 [stage_events_to_redshift, stage_songs_to_redshift] >> \
 load_songplays_table >> [load_song_dimension_table,
                          load_user_dimension_table,
