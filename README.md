@@ -1,10 +1,14 @@
-# udacity-data_pipelines
-Submission for Udacity DEND Data Pipelines project.
+# udacity-data_pipelines DEMO mode
+DEMO mode - Submission for Udacity DEND Data Pipelines project.
 
 - [Link to rubric](https://review.udacity.com/#!/rubrics/2478/view)
 - [Link to project instructions](https://classroom.udacity.com/nanodegrees/nd027/parts/45d1c3b1-d87b-4578-a6d0-7e86bb5fea6c/modules/2adf57ae-57cb-42f6-bd65-a2c383797ce3/lessons/4d1d5892-2cab-4456-8b1a-fb2b5fa1488d/concepts/last-viewed?contentVersion=2.0.0&contentLocale=en-us)
 
-**Note: I also added a `Create_staging_tables` task. I could have kept table creations in `Stage_events` and `Stage_songs` but I wanted to experiment with the possibility of skipping a step when there is an error, for my future reference. I noticed the Rubric does not have a requirement that all DAG tasks must pass so I gave it a shot.**
+**Note: Differences between DEMO mode and Master:**
+
+1. In DEMO mode I added a `Create_staging_tables` task. I could have kept table creations in `Stage_events` and `Stage_songs` but I wanted to experiment with the possibility of skipping a step when there is an error, for my future reference.
+2. In DEMO mode, entering data into staging tables is done only when the table is empty. This is because filling song data takes a lot of time (almost 1 hour in 4-node Redshift cluster). In a real-world setting, it is apparently preferable to run the COPY command multiple times.
+3. In DEMO mode, tables are created as we are running the DAG. In Master, tables are to be created in the cluster before we run the DAG.
 
 ## How to run the project locally
 
