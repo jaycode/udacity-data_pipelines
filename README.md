@@ -22,7 +22,9 @@ pip install apache-airflow[s3]
 
 ### 3. Update `airflow.cfg` to hide examples:
 
-In file `airflow/airflow.cfg`, replace `load_examples = True` with `load_examples = False`.
+1. In file `airflow/airflow.cfg`, replace `load_examples = True` with `load_examples = False`.
+2. Delete `airflow/airflow.db`.
+3. Close the terminals and re-run `./airflow-start.sh`.
 
 ### 4. Create connection settings:
 
